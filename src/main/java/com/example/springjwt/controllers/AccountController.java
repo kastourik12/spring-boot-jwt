@@ -5,6 +5,7 @@ import com.example.springjwt.payload.response.MessageResponse;
 import com.example.springjwt.repositories.AppUserRepository;
 import com.example.springjwt.services.AccountService;
 import com.example.springjwt.services.AccountServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,9 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/account")
+@RequiredArgsConstructor
 public class AccountController {
-    @Autowired
     private AccountServiceImpl accountService;
-    @Autowired
     private AppUserRepository appUserRepository;
     @PostMapping("/register")
     public ResponseEntity<?> addNewUser(@RequestBody @Valid RegisterPayload registerPayload) {

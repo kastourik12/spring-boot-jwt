@@ -6,6 +6,7 @@ import com.example.springjwt.payload.request.RegisterPayload;
 import com.example.springjwt.repositories.AppRoleRepository;
 import com.example.springjwt.repositories.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,16 @@ public class AccountServiceImpl implements AccountService {
         appUser.setLastName(registerPayload.getLastName());
         appUser.setPhone(registerPayload.getPhone());
         appUser.setEnabled(false);
+        if(registerPayload.getRoles() != null) {
+            AppRole defaultRole = appRoleRepository.findByRoleName("ROLE_USER").orElseThrow(() -> new UsernameNotFoundException("Role not found"));
+            appUser.getRoles().add(defaultRole);
+        }
+        if (registerPayload.getRoles() != null) {
+            for (String customRoles : registerPayload.getRoles()) {
+                AppRole addedRole = appRoleRepository.findByRoleName(customRoles).orElseThrow(() -> new UsernameNotFoundException("Role not found"));
+                appUser.getRoles().add(addedRole);
+            }
+        }
         return appUserRepository.save(appUser);
     }
 
@@ -42,16 +53,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void addRoleToUser(String username, String roleName) {
-        AppUser user = appUserRepository.findByUsername(username);
-        AppRole role = appRoleRepository.findByRoleName(roleName);
+        AppUser user = appUserRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("User with username:" + username + " not found"));
+        AppRole role = appRoleRepository.findByRoleName(roleName).orElseThrow(() -> new UsernameNotFoundException("Role with name:" + roleName + " not found"));
         user.getRoles().add(role);
     }
-
-    @Override
-    public AppUser findUserByUsername(String username) {
-        return appUserRepository.findByUsername(username);
-    }
-
     @Override
     public List<AppUser> findAllUsers() {
         return appUserRepository.findAll();

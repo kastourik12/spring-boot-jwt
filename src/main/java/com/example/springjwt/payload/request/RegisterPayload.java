@@ -3,6 +3,7 @@ package com.example.springjwt.payload.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -28,4 +29,6 @@ public class RegisterPayload {
     private String city;
     private String country;
     private String zip;
+    @Nullable
+    private String[] roles;
 }

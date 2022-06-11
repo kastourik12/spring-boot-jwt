@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.xml.bind.annotation.XmlAttribute;
 
 @Entity(name = "app_roles")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class AppRole {
-    @Id @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
+    @Column(name = "id") @Id @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     private Long id;
+    @Column( name = "name" ) @NotBlank(message = "Name is required")
     private String roleName;
+
 
 }
